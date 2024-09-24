@@ -1,7 +1,7 @@
 {
-  "name": "connect-flash",
+  "name": "@hackdm/connect-flash",
   "version": "0.1.1",
-  "description": "Flash message middleware for Connect.",
+  "description": "Flash message middleware for Connect/Express.",
   "keywords": [
     "connect",
     "express",
