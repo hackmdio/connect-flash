@@ -50,14 +50,27 @@ vows.describe('flash').addBatch({
         assert.equal(msgs[0], 'Something went wrong');
         assert.lengthOf(Object.keys(req.session.flash), 0);
       },
-      'should set/get flash unicode message' : function(err, req, res) {
-        const count = req.flash('error', 'a Ā 𐀀 文 🦄');
-        assert.equal(count, 1);
+      'should be encoded to base64 in session' : function(err, req, res) {
+        req.flash('error', 'Something went wrong');
+        assert.equal(req.session.flash.error[0], 'U29tZXRoaW5nIHdlbnQgd3Jvbmc=');
+        const msgs = req.flash('error');
+        assert.equal(msgs[0], 'Something went wrong');
+      },
+      'should set/get unicode flash message' : function(err, req, res) {
+        req.flash('error', 'a Ā 𐀀 文 🦄');
         assert.equal(req.session.flash.error[0], 'YSDEgCDwkICAIOaWhyDwn6aE');
         const msgs = req.flash('error');
-        assert.lengthOf(msgs, 1);
         assert.equal(msgs[0], 'a Ā 𐀀 文 🦄');
-        assert.lengthOf(Object.keys(req.session.flash), 0);
+      },
+      'should get undecoded flash message when it is not been base64 encode in session' : function(err, req, res) {
+        req.flash('error', 'Something went wrong');
+        req.session.flash.error.push('Something went wrong');
+        assert.equal(req.session.flash.error[0], 'U29tZXRoaW5nIHdlbnQgd3Jvbmc=');
+        assert.equal(req.session.flash.error[1], 'Something went wrong');
+        console.log(req.session.flash.error);
+        const msgs = req.flash('error');
+        assert.equal(msgs[0], 'Something went wrong');
+        assert.equal(msgs[1], 'Something went wrong');
       },
       'should set multiple flash messages' : function(err, req, res) {
         req.flash('info', 'Welcome');
