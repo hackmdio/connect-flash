@@ -7,12 +7,8 @@ var flash = require('flash');
 function MockRequest() {
   this.session = {};
 }
-
-function MockRequestWithoutSession() {
-}
-
-function MockResponse() {
-}
+function MockRequestWithoutSession() {}
+function MockResponse() {}
 
 
 vows.describe('flash').addBatch({
@@ -52,6 +48,15 @@ vows.describe('flash').addBatch({
         var msgs = req.flash('error');
         assert.lengthOf(msgs, 1);
         assert.equal(msgs[0], 'Something went wrong');
+        assert.lengthOf(Object.keys(req.session.flash), 0);
+      },
+      'should set/get flash unicode message' : function(err, req, res) {
+        const count = req.flash('error', 'a Ā 𐀀 文 🦄');
+        assert.equal(count, 1);
+        assert.equal(req.session.flash.error[0], 'YSDEgCDwkICAIOaWhyDwn6aE');
+        const msgs = req.flash('error');
+        assert.lengthOf(msgs, 1);
+        assert.equal(msgs[0], 'a Ā 𐀀 文 🦄');
         assert.lengthOf(Object.keys(req.session.flash), 0);
       },
       'should set multiple flash messages' : function(err, req, res) {
