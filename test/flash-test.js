@@ -67,7 +67,6 @@ vows.describe('flash').addBatch({
         req.session.flash.error.push('Something went wrong');
         assert.equal(req.session.flash.error[0], 'U29tZXRoaW5nIHdlbnQgd3Jvbmc=');
         assert.equal(req.session.flash.error[1], 'Something went wrong');
-        console.log(req.session.flash.error);
         const msgs = req.flash('error');
         assert.equal(msgs[0], 'Something went wrong');
         assert.equal(msgs[1], 'Something went wrong');
